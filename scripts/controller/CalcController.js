@@ -3,7 +3,16 @@ class CalcController
 
     constructor()
     {
-        this._displayCalc = "0";
+        /** Grafia "El" é uma CONVENÇÃO e
+         * se refere ao Elemento HTML
+         */
+        this._locale = 'pt-BR';
+
+        this._displayCalcEl = document.querySelector("#display");
+
+        this._timeEl = document.querySelector("#hora");
+
+        this._dateEl = document.querySelector("#data");
 
         this._currentDate;
 
@@ -15,24 +24,72 @@ class CalcController
 
     initialize()
     {
-        /** Grafia "El" é uma CONVENÇÃO e
-         * se refere ao elemento HTML
-         */
-        let displayCalcEl = document.querySelector("#display");
+        this.setDisplayDateTime();
 
-        let timeEl = document.querySelector("#hora");
+        setInterval(
 
-        let dateEl = document.querySelector("#data");
+            () => {
 
-        /** Inner HTML faz parte das 
-         * propriedades do DOM */
-        displayCalcEl.innerHTML = "4567";
-        dateEl.innerHTML = "15/01/2019";
-        timeEl.innerHTML = "19:46";
+                this.setDisplayDateTime();      
 
+            }, 
+            1000
+        
+        );//end setInterval
+        
 
+        
     }//END initialize
 
+
+
+    setDisplayDateTime()
+    {
+        this.displayDate = this.currentDate.toLocaleDateString(this._locale,{
+
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+
+        });
+                
+        this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
+    }//END setDisplayDateTime
+
+
+
+    /** Getter */
+    get displayTime()
+    {
+        return this._timeEl.innerHTML;
+    }//getter displayTime
+
+
+
+
+    /** Getter */
+    get displayDate()
+    {
+        return this._dateEl.innerHTML;
+    }//getter displayDate
+
+
+
+
+    /** Setter */
+    set displayTime(value)
+    {
+        this._timeEl.innerHTML = value;
+    }//setter displayTime
+
+
+
+
+    /** Setter */
+    set displayDate(value)
+    {
+        this._dateEl.innerHTML = value;
+    }//setter displayDate
 
 
 
@@ -40,31 +97,37 @@ class CalcController
     /** Getter */
     get displayCalc()
     {
-        return this._displayCalc;
+        return this._displayCalcEl.innerHTML;
     }//getter displayCalc
 
 
 
+
+
     /** Setter */
-    set displayCalc(valor)
+    set displayCalc(value)
     {
-        this._displayCalc = valor;
+        this._displayCalcEl.innerHTML = value;
     }//setter displayCalc
+
+
 
 
 
     /** Getter */
     get currentDate()
     {
-        return this._currentDate;
+        return new Date();
     }//getter currentDate
 
 
 
+
+
     /** Setter */
-    set currentDate(valor)
+    set currentDate(value)
     {
-        this._currentDate = valor;
+        this._currentDate = value;
     }//setter currentDate
 
 

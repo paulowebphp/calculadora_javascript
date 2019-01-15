@@ -1,3 +1,1 @@
-let calculator = new CalcController();
-
-console.log(calculator.displayCalc);
+window.calculator = new CalcController();
