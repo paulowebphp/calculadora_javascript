@@ -18,6 +18,8 @@ class CalcController
 
         this.initialize();
 
+        this.initButtonsEvents();
+
     }//END constructor
 
 
@@ -43,9 +45,53 @@ class CalcController
 
 
 
+
+    addEventListenerAll(element, events, fn)
+    {
+        events.split(' ').forEach(event =>
+            {
+                element.addEventListener(event, fn, false);
+
+            });//end forEach
+
+
+    }//END addEventListenerAll
+
+
+
+
+
     initButtonsEvents()
     {
         let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+        
+       
+        /** addEventListener recebe dois parãmetros:
+         * - qual o evento que eu quero captar
+         * - qual é a ação que deve ocorrer
+         */
+        buttons.forEach( (btn, index) =>
+        {
+            this.addEventListenerAll(btn, 'click drag', e => 
+            {
+                /** Pega apenas o valor após btn-
+                 * do nome das classes da tag g
+                 */
+                console.log(btn.className.baseVal.replace("btn-",""));
+
+            });//end addEventListenerAll
+
+
+
+            this.addEventListenerAll(btn, "mouseover mouseup mousedown", e =>
+            {
+                btn.style.cursor = "pointer";
+            });//end addEventListenerAll
+
+
+        });//end forEach
+
+
     }//END initButtonsEvents
 
 
