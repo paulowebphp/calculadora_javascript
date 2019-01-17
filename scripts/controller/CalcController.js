@@ -123,6 +123,8 @@ class CalcController
 
         this._operation = [result, last];
 
+        this.setLastNumberToDisplay();
+
     }//END calc
 
 
@@ -146,7 +148,22 @@ class CalcController
 
     setLastNumberToDisplay()
     {
-        
+        let lastNumber;
+
+        for (let i = (this._operation.length-1); i >= 0; i--)
+        {
+            if ( !this.isOperator( this._operation[i] ) )
+            {
+                lastNumber = this._operation[i];
+                break;
+
+            }//end if
+
+        }//end for
+
+        this.displayCalc = lastNumber;
+
+
     }//END setLastNumberToDisplay
 
 
@@ -178,6 +195,10 @@ class CalcController
                  * posião de um array
                  */
                 this.pushOperation(value);
+
+                /** ATUALIZAR DISPLAY */
+                this.setLastNumberToDisplay();
+
             }//end else
 
         }//end if
