@@ -70,6 +70,10 @@ class CalcController
     {
         this._operation = [];
 
+        this._lastNumber = '';
+
+        this._lastOperator = '';
+
         this.setLastNumberToDisplay();
 
     }//END clearAll
@@ -256,15 +260,6 @@ class CalcController
                 this.setLastOperation(value);
 
             }//end if
-            else if( isNaN( value ) )
-            {
-                /** Se não é operador, ou seja, 
-                 * é ponto ou igual (não pode ser 
-                 * numero pois está dentro do if 
-                 * do isNaN, então realiza outra ação */
-                console.log('OUTRA coisa', value);
-
-            }//end else if
             else
             {
                 /** Push adicona um novo elemento na ultima
@@ -292,7 +287,7 @@ class CalcController
                 /** Push adicona um novo elemento na ultima
                  * posião de um array
                  */
-                this.setLastOperation( parseInt(newValue) );
+                this.setLastOperation( newValue );
 
                 /** ATUALIZAR DISPLAY */
                 this.setLastNumberToDisplay();
@@ -312,6 +307,41 @@ class CalcController
 
     }//END setError
 
+
+
+
+    addDot()
+    {
+        let lastOperation = this.getLastOperation();
+
+        if(
+
+            typeof lastOperation === 'string'
+            &&
+            lastOperation.split('').indexOf('.') > -1
+
+        ) return;
+
+
+        if(
+
+            this.isOperator(lastOperation)
+            ||
+            !lastOperation
+        )
+        {
+            this.pushOperation('0.');
+
+        }//end if
+        else
+        {
+            this.setLastOperation(lastOperation.toString() + '.');
+        }//end else
+
+        this.setLastNumberToDisplay();
+
+
+    }//END addDot
 
 
     
@@ -351,7 +381,7 @@ class CalcController
                 break;
 
             case 'ponto':
-                this.addOperation('.');
+                this.addDot();
                 break;
         
             case '0':
