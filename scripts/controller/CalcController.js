@@ -3,13 +3,15 @@ class CalcController
 
     constructor()
     {
-        /** Grafia "El" é uma CONVENÇÃO e
-         * se refere ao Elemento HTML
-         */
+        this._operation = [];
+        
         this._locale = 'pt-BR';
 
         this._displayCalcEl = document.querySelector("#display");
 
+        /** Grafia "El" é uma CONVENÇÃO e
+         * se refere ao Elemento HTML
+         */
         this._timeEl = document.querySelector("#hora");
 
         this._dateEl = document.querySelector("#data");
@@ -46,7 +48,7 @@ class CalcController
 
 
 
-    addEventListenerAll(element, events, fn)
+    addEventListenerAll( element, events, fn )
     {
         events.split(' ').forEach(event =>
             {
@@ -57,6 +59,185 @@ class CalcController
 
     }//END addEventListenerAll
 
+
+
+    clearAll()
+    {
+        this._operation = [];
+
+    }//END clearAll
+
+
+
+
+
+    clearEntry()
+    {
+        /** Pop retira o ultimo elemento de um array
+         */
+        this._operation.pop();
+
+    }//END clearEntry
+
+
+
+    getLastOperation()
+    {
+        
+        return this._operation[this._operation.length - 1];
+
+    }//END getLastOperation
+
+
+
+
+    setLastOperation( value )
+    {
+        this._operation[this._operation.length - 1] = value;
+
+    }//END setLastOperation
+
+
+
+    isOperator( value )
+    {
+        /** indexOf é um método de arrays
+         * que busca o valor passado como 
+         * parâmetro dentro do array em questão e,
+         * se achar, retorna o index do elemento 
+         * (o index do elemento é 0 ou positivo, tem
+         * valor booleano true ao retornar), 
+         * caso contrário, se não encontrar, retorna
+         * o valor de -1 (o valor de -1 tem valor
+         * booleano de false) */
+        return ( ['+','-','*','/','%'].indexOf(value) > -1 );
+
+    }//END isOperator
+
+
+    
+    addOperation( value )
+    {
+        console.log('a',isNaN(this.getLastOperation()));
+
+        if ( isNaN( this.getLastOperation() ) ) 
+        {
+            /** É String (isNaN é true) */
+            if ( this.isOperator(value) )
+            {
+                /** Se é um operador, troca-se
+                 * para outro operador */
+                this._setLastOperation(value);
+
+            }//end if
+            else if( isNaN( value ) )
+            {
+                /** Se não é operador, ou seja, 
+                 * é ponto ou igual (não pode ser 
+                 * numero pois está dentro do if 
+                 * do isNaN, então realiza outra ação */
+                console.log(value);
+
+            }//end else if
+            else
+            {
+                /** Push adicona um novo elemento na ultima
+                 * posião de um array
+                 */
+                this._operation.push(value);
+            }//end else
+
+        }//end if
+        else
+        {
+            /** É Number (isNaN é false) */
+            let newValue = this.getLastOperation().toString() + value.toString();
+
+            /** Push adicona um novo elemento na ultima
+             * posião de um array
+             */
+            this.setLastOperation( parseInt(newValue) );
+
+
+        }//end else
+
+        
+
+        console.log(this._operation);
+
+    }//END addOperator
+
+
+
+
+    setError()
+    {
+        this.displayCalc = "Error";
+
+    }//END setError
+
+
+
+    
+    execBtn( value )
+    {
+        switch ( value ) {
+            case 'ac':
+                this.clearAll();
+                break;
+
+            case 'ce':
+                this.clearEntry();
+                break;
+
+            case 'soma':
+                this.addOperation('+');
+                break;
+
+            case 'subtracao':
+                this.addOperation('-');
+                break;
+
+            case 'divisao':
+                this.addOperation('/');
+                break;
+
+            case 'multiplicacao':
+                this.addOperation('*');
+                break;
+
+            case 'porcento':
+                this.addOperation('%');
+                break;
+
+            case 'igual':
+                
+                break;
+
+            case 'ponto':
+                this.addOperation('.');
+                break;
+        
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                this.addOperation( parseInt(value) );
+                break;
+
+            default:
+                this.setError();
+                break;
+
+        }//end switch
+
+    }//END execBtn
 
 
 
@@ -77,13 +258,15 @@ class CalcController
                 /** Pega apenas o valor após btn-
                  * do nome das classes da tag g
                  */
-                console.log(btn.className.baseVal.replace("btn-",""));
+                let textBtn = btn.className.baseVal.replace("btn-","");
+
+                this.execBtn(textBtn);
 
             });//end addEventListenerAll
 
 
 
-            this.addEventListenerAll(btn, "mouseover mouseup mousedown", e =>
+            this.addEventListenerAll( btn, "mouseover mouseup mousedown", e =>
             {
                 btn.style.cursor = "pointer";
             });//end addEventListenerAll
@@ -100,7 +283,7 @@ class CalcController
 
     setDisplayDateTime()
     {
-        this.displayDate = this.currentDate.toLocaleDateString(this._locale,{
+        this.displayDate = this.currentDate.toLocaleDateString( this._locale, {
 
             day: "2-digit",
             month: "long",
@@ -108,7 +291,8 @@ class CalcController
 
         });
                 
-        this.displayTime = this.currentDate.toLocaleTimeString(this._locale);
+        this.displayTime = this.currentDate.toLocaleTimeString( this._locale );
+
     }//END setDisplayDateTime
 
 
@@ -132,7 +316,7 @@ class CalcController
 
 
     /** Setter */
-    set displayTime(value)
+    set displayTime( value )
     {
         this._timeEl.innerHTML = value;
     }//setter displayTime
@@ -141,7 +325,7 @@ class CalcController
 
 
     /** Setter */
-    set displayDate(value)
+    set displayDate( value )
     {
         this._dateEl.innerHTML = value;
     }//setter displayDate
@@ -160,7 +344,7 @@ class CalcController
 
 
     /** Setter */
-    set displayCalc(value)
+    set displayCalc( value )
     {
         this._displayCalcEl.innerHTML = value;
     }//setter displayCalc
@@ -180,7 +364,7 @@ class CalcController
 
 
     /** Setter */
-    set currentDate(value)
+    set currentDate( value )
     {
         this._currentDate = value;
     }//setter currentDate
