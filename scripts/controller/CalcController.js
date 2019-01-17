@@ -99,6 +99,34 @@ class CalcController
 
 
 
+
+    pushOperation( value )
+    {
+        this._operation.push(value);
+
+        if ( this._operation.length > 3 )
+        {
+
+            this.calc();
+
+        }//end if
+
+    }//END pushOperation
+
+
+
+    calc()
+    {
+        let last = this._operation.pop();
+
+        let result = eval(this._operation.join(""));
+
+        this._operation = [result, last];
+
+    }//END calc
+
+
+
     isOperator( value )
     {
         /** indexOf é um método de arrays
@@ -115,11 +143,16 @@ class CalcController
     }//END isOperator
 
 
+
+    setLastNumberToDisplay()
+    {
+        
+    }//END setLastNumberToDisplay
+
+
     
     addOperation( value )
     {
-        console.log('a',isNaN(this.getLastOperation()));
-
         if ( isNaN( this.getLastOperation() ) ) 
         {
             /** É String (isNaN é true) */
@@ -127,7 +160,7 @@ class CalcController
             {
                 /** Se é um operador, troca-se
                  * para outro operador */
-                this._setLastOperation(value);
+                this.setLastOperation(value);
 
             }//end if
             else if( isNaN( value ) )
@@ -136,7 +169,7 @@ class CalcController
                  * é ponto ou igual (não pode ser 
                  * numero pois está dentro do if 
                  * do isNaN, então realiza outra ação */
-                console.log(value);
+                console.log('OUTRA coisa', value);
 
             }//end else if
             else
@@ -144,26 +177,32 @@ class CalcController
                 /** Push adicona um novo elemento na ultima
                  * posião de um array
                  */
-                this._operation.push(value);
+                this.pushOperation(value);
             }//end else
 
         }//end if
         else
         {
-            /** É Number (isNaN é false) */
-            let newValue = this.getLastOperation().toString() + value.toString();
+            if ( this.isOperator(value) )
+            {
+                this.pushOperation(value);
+            }//end if
+            else
+            {
+                /** É Number (isNaN é false) */
+                let newValue = this.getLastOperation().toString() + value.toString();
 
-            /** Push adicona um novo elemento na ultima
-             * posião de um array
-             */
-            this.setLastOperation( parseInt(newValue) );
+                /** Push adicona um novo elemento na ultima
+                 * posião de um array
+                 */
+                this.setLastOperation( parseInt(newValue) );
 
+                /** ATUALIZAR DISPLAY */
+                this.setLastNumberToDisplay();
+
+            }//end else
 
         }//end else
-
-        
-
-        console.log(this._operation);
 
     }//END addOperator
 
