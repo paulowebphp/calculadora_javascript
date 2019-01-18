@@ -26,6 +26,8 @@ class CalcController
 
         this.initButtonsEvents();
 
+        this.initKeyboard();
+
     }//END constructor
 
 
@@ -50,6 +52,61 @@ class CalcController
         
     }//END initialize
 
+
+
+
+    initKeyboard()
+    {
+        document.addEventListener('keyup', e => 
+        {
+            switch ( e.key ) {
+                case 'Escape':
+                    this.clearAll();
+                    break;
+    
+                case 'Backspace':
+                    this.clearEntry();
+                    break;
+    
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '%':
+                    this.addOperation(e.key);
+                    break;
+    
+                case 'Enter':
+                case '=':
+                    this.calc();
+                    break;
+    
+                case '.':
+                case ',':
+                    this.addDot();
+                    break;
+            
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    this.addOperation( parseInt(e.key) );
+                    break;
+    
+                /** Nâo pode ter opção default, pois
+                 * usuário pode clicar diversas outras 
+                 * teclas com shift, control, tab etc.
+                 */
+    
+            }//end switch
+        });
+    }//END initKeyboard
 
 
 
