@@ -274,7 +274,24 @@ class CalcController
 
     getResult()
     {
-        return eval(this._operation.join(""));
+        try
+        {
+            return eval(this._operation.join(""));
+
+        }//end try
+        catch( e )
+        {
+            setTimeout( () => 
+            {
+                this.setError();
+            }, 1
+
+            );
+
+      
+
+        }//end catch
+
     }//END getResult
 
 
@@ -661,7 +678,7 @@ class CalcController
         if( value.toString().length > 10 )
         {
             this.setError();
-            
+
             return false;
 
         }//end if
