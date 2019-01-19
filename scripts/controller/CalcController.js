@@ -3,6 +3,10 @@ class CalcController
 
     constructor()
     {
+        this._audio = new Audio('click.mp3');
+
+        this._audioOnOff = false;
+
         this._lastOperator = '';
 
         this._lastNumber = '';
@@ -32,6 +36,46 @@ class CalcController
 
 
 
+    pasteFromClipboard()
+    {
+        document.addEventListener('paste', e =>
+        {
+            let text = e.clipboardData.getData('Text');
+
+            this.displayCalc = parseFloat(text);
+
+        });//end addEventListener
+
+    }//END pasteFromClipboard
+
+
+
+    copyToClipboard()
+    {
+        /** Criar uma tag/elemento HTML na tela
+         * dinamicamente
+         */
+        let input = document.createElement('input');
+
+        input.value = this.displayCalc;
+
+        document.body.appendChild(input);
+
+        input.select();
+
+        /** Parametro "Copy" deve ser com 'C' maiúsculo */
+        document.execCommand("Copy");
+
+        /** Este comando só acontece porque a calculadora
+         * deste projeto criado com SVG. Se fosse criada já
+         * com 'inputs' como é de praxe, não teria a
+         * necessidade de aplicar o 'remove'
+         */
+        input.remove();
+
+    }//END copyToClipboard
+
+
     initialize()
     {
         this.setDisplayDateTime();
@@ -49,8 +93,45 @@ class CalcController
 
         this.setLastNumberToDisplay();
 
+        this.pasteFromClipboard();
+
+        document.querySelectorAll('.btn-ac').forEach( btn => 
+        {
+            btn.addEventListener('dblclick', e =>
+            {
+                this.toggleAudio();
+
+            });//end addEventListener
+
+        });//end querySelectorAll
         
     }//END initialize
+
+
+
+
+    toggleAudio()
+    {
+
+        this._audioOnOff = !this._audioOnOff;
+
+
+    }//END toggleAudio
+
+
+
+
+    playAudio()
+    {
+        if( this._audioOnOff )
+        {
+            this._audio.currentTime = 0;
+
+            this._audio.play();
+            
+        }//end if
+
+    }//END playAudio
 
 
 
@@ -59,6 +140,8 @@ class CalcController
     {
         document.addEventListener('keyup', e => 
         {
+            this.playAudio();
+
             switch ( e.key ) {
                 case 'Escape':
                     this.clearAll();
@@ -97,6 +180,10 @@ class CalcController
                 case '8':
                 case '9':
                     this.addOperation( parseInt(e.key) );
+                    break;
+
+                case 'c':
+                    if( e.ctrlKey ) this.copyToClipboard();
                     break;
     
                 /** Nâo pode ter opção default, pois
@@ -404,6 +491,8 @@ class CalcController
     
     execBtn( value )
     {
+        this.playAudio();
+
         switch ( value ) {
             case 'ac':
                 this.clearAll();
