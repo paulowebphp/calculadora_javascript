@@ -658,7 +658,16 @@ class CalcController
     /** Setter */
     set displayCalc( value )
     {
+        if( value.toString().length > 10 )
+        {
+            this.setError();
+            
+            return false;
+
+        }//end if
+
         this._displayCalcEl.innerHTML = value;
+
     }//setter displayCalc
 
 
